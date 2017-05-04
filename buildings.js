@@ -8,31 +8,32 @@ function clearElement(id){
 }
 
 // constructs house sketch
-function drawHouse(g,c,t){
+function drawHouse(g,c,t,o){
   var scale=50
   var group=g.append('svg:g').attr('stroke',c)
   var parts=[]
   parts.push(svgHouse({x:0,y:250},scale))
-  parts.push(svgDoor({x:150,y:250},scale))
-  parts.push(svgRoof({x:1,y:125},scale-2))
   parts.push(svgWindow({x:75,y:150},scale))
-  parts.push(svgWindow({x:100,y:50},scale))
   var filled=[]
   filled.push(svgChimney({x:175,y:50},scale))
+  filled.push(svgRoof({x:1,y:125},scale-2))
+  filled.push(svgDoor({x:150,y:250},scale))
   var tiny=[]
   tiny.push(svgCurls({x:75,y:150},scale))
-  tiny.push(svgCurls({x:100,y:50},scale))
-  tiny.push('M169 200 H172')// door handle
+  var empty=[]
+  empty.push('M169 200 H172')// door handle
 
   for(var i=0;i<parts.length;i++)
-    group.append('svg:path').attr('d',parts[i]).attr('stroke-width',8).attr('fill',c)
+    group.append('svg:path').attr('d',parts[i]).attr('stroke-width',8).attr('fill',c).attr('fill','transparent')
   for(i=0;i<filled.length;i++)
     group.append('svg:path').attr('d',filled[i]).attr('stroke-width',8).attr('fill',c)
   for(i=0;i<tiny.length;i++)
     group.append('svg:path').attr('d',tiny[i]).attr('stroke-width',2).attr('fill','transparent')
+  for(i=0;i<empty.length;i++)
+    group.append('svg:path').attr('d',empty[i]).attr('stroke-width',3).attr('stroke','white').attr('fill','transparent')
 
   group.attr('transform',t)
-//   group.attr('opacity',.4)
+  group.attr('opacity',o)
 }
 
 function init(){
@@ -61,8 +62,8 @@ function refresh(){
         x=0
         y++
       }
-//       drawHouse(g,c,'translate('+x*25+' '+y*30+')scale(0.1)')
-      drawHouse(g,data[i].c,'translate('+x*25+' '+y*30+')scale(0.1)')
+//       drawHouse(g,c,'translate('+x*25+' '+y*30+')scale(0.1)',.4)
+      drawHouse(g,data[i].c,'translate('+x*25+' '+y*30+')scale(0.1)',.4)
       x++
     }
     g.append('svg:text').append('svg:tspan').attr('font-family','Helvetica').attr('font-size',(data[i].n>100?72:50)).attr('font-weight','bold').attr('fill',data[i].c).text(data[i].n+' '+data[i].t).attr('x',data[i].x).attr('y',data[i].y)
@@ -91,7 +92,7 @@ function generateHistogram(g,count,y){
   var sumX=70
   for(var i=0;i<count;i++){
     var c=w3colors[Math.floor(Math.random()*w3colors.length)]
-    drawHouse(g,c,'translate('+sumX+' '+y+')scale(0.15)')
+    drawHouse(g,c,'translate('+sumX+' '+y+')scale(0.15)',1)
     sumX+=37
   }
   return sumX
@@ -99,7 +100,7 @@ function generateHistogram(g,count,y){
 
 // SVG path
 function svgChimney(p,s){
-  var retStr='M'+p.x+' '+p.y+' V'+(p.y-s/2)+' H'+(p.x+s/4)+' V'+(p.y+s/3)
+  var retStr='M'+p.x+' '+(p.y+s/8)+' V'+(p.y-s/2)+' H'+(p.x+s/4)+' V'+(p.y+s/2)
   return retStr
 }
 
@@ -128,7 +129,7 @@ function svgWindow(p,s){
   var dx=Math.round(s/5)
   var dy=Math.round(s/7)
 
-  var retStr='M'+x+' '+y+' C'+(x+dx)+' '+(y-dy)
+  var retStr='M'+x+' '+(y+dy)+' V'+y+' C'+(x+dx)+' '+(y-dy)
   x+=s/2
   retStr+=','+(x-dx)+' '+(y-dy)+','+x+' '+y+' C'+(x+dx)+' '+(y-dy)
   x+=s/2
