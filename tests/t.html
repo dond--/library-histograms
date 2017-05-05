@@ -2,20 +2,54 @@
 <head>
   <script type="text/javascript" src="Tests.js"></script>
   <script type="text/javascript" src="../figs.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
   <script type="text/javascript">
   var T
 
-  function init(){
+  function _init(){
     T=new Tests()
     T.setOutput(document.getElementById('o'))
 
-    // do tests here
+    var eName='graph'
+    var e=document.getElementById(eName)
+
+    T.test('Clear element',function(){
+      e.appendChild(document.createTextNode('text'))
+      clearElement(eName)
+      if(e.hasChildNodes())
+        throw 'Element '+eName+' not empty'
+    })
+
+    T.test('Draw sketch',function(){
+      var x=[1,2,3]
+      var y=[1,6,4]
+      var dx=Math.random()*5
+      var dy=Math.random()*5
+      var g=d3.select('#graph').append('svg:svg').attr('width',10).attr('height',10)
+      drawFigure(g,10,x,y,9,dx,dy,false)
+      if(!e.hasChildNodes())
+        throw 'Element '+eName+' empty'
+      var svg=e.childNodes[0]
+      if(!svg.hasChildNodes()||svg.nodeName.toLowerCase()!=='svg')
+        throw 'SVG sketch not present'
+      var h=svg.innerHTML.toLowerCase()
+      if(h.indexOf('<polyline')==-1||h.indexOf('<circle')==-1)
+        throw 'Polyline and/or circle missing in sketch'
+      if(h.indexOf('translate('+dx+','+dy+')')==-1)
+        throw 'Translation missing'
+    })
+
+    //T.test('Fill whole graph',function(){
+    //  refresh()
+    //})
 
     T.stat()
   }
   </script>
 </head>
-<body onload="init()">
+<body onload="_init()">
+<h1>../figs.js tests:</h1>
 <p width="100%" height="100%" id="o" style="border:solid 1px grey"></p>
+<div id="graph" style="display:none"></div>
 </body>
 </html>

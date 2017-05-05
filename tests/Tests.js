@@ -6,7 +6,10 @@ function Tests(){
 }
 
 Tests.prototype.fail=function(e){
-  this.log('[FAIL] '+e.message)
+  if(e.message)
+    this.log('[FAIL] '+e.message)
+  else
+    this.log('[FAIL] '+e)
 }
 
 Tests.prototype.log=function(msg){
@@ -16,7 +19,7 @@ Tests.prototype.log=function(msg){
 }
 
 Tests.prototype.ok=function(msg){
-  this.log('[OK]   '+msg)
+  this.log('[OK] '+msg)
 }
 
 Tests.prototype.setOutput=function(o){
