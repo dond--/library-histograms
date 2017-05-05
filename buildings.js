@@ -51,18 +51,15 @@ function refresh(){
   clearElement('graph')
   var g=d3.select('#graph').append('svg:svg').attr('width',750).attr('height',750)
   var x=0,y=0
-//   var data=[{n:343,c:'red',t:'zavřeno',x:180,y:200},{n:174,c:'darkgreen',t:'komunitních',x:100,y:460},{n:58,c:'steelblue',t:'soukromých',x:210,y:550},{n:50,c:'orange',t:'nových',x:250,y:610},{n:111,c:'darkviolet',t:'k uzavření v 2017',x:10,y:700}]
   var data=[{n:343,c:'red',t:'closed',x:180,y:200},{n:174,c:'darkgreen',t:'community',x:100,y:460},{n:58,c:'navy',t:'private',x:210,y:550},{n:50,c:'orange',t:'new',x:250,y:610},{n:111,c:'magenta',t:'to be closed 2017',x:10,y:710}]
   var tY=0
   for(var i=0;i<data.length;i++){
-    var c=w3colors[Math.floor(Math.random()*w3colors.length)]
     tY=y*30
     for(var j=0;j<data[i].n;j++){
       if(x>29){
         x=0
         y++
       }
-//       drawHouse(g,c,'translate('+x*25+' '+y*30+')scale(0.1)',.4)
       drawHouse(g,data[i].c,'translate('+x*25+' '+y*30+')scale(0.1)',.4)
       x++
     }
