@@ -25,7 +25,7 @@
       var y=[1,6,4]
       var dx=Math.random()*5
       var dy=Math.random()*5
-      var g=d3.select('#graph').append('svg:svg').attr('width',10).attr('height',10)
+      var g=d3.select('#'+eName).append('svg:svg').attr('width',10).attr('height',10)
       drawFigure(g,10,x,y,9,dx,dy,false)
       if(!e.hasChildNodes())
         throw 'Element '+eName+' empty'
@@ -37,6 +37,26 @@
         throw 'Polyline and/or circle missing in sketch'
       if(h.indexOf('translate('+dx+','+dy+')')==-1)
         throw 'Translation missing'
+    })
+
+    T.test('Draw female figure',function(){
+      clearElement(eName)
+      var g=d3.select('#'+eName).append('svg:svg').attr('width',50).attr('height',50)
+      drawFemaleFigure(g,{x:0,y:0},50,false)
+      var svg=e.childNodes[0]
+      var h=svg.innerHTML.toLowerCase()
+      if(h.indexOf('<polyline')==-1||h.indexOf('points="8')==-1||h.indexOf('circle cx="8')==-1)
+        throw 'Female figure sketch missing'
+    })
+
+    T.test('Draw male figure',function(){
+      clearElement(eName)
+      var g=d3.select('#'+eName).append('svg:svg').attr('width',50).attr('height',50)
+      drawMaleFigure(g,{x:0,y:0},50,false)
+      var svg=e.childNodes[0]
+      var h=svg.innerHTML.toLowerCase()
+      if(h.indexOf('<polyline')==-1||h.indexOf('r="7.5')==-1)
+        throw 'Male figure sketch missing'
     })
 
     //T.test('Fill whole graph',function(){
