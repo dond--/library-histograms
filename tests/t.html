@@ -59,9 +59,39 @@
         throw 'Male figure sketch missing'
     })
 
-    //T.test('Fill whole graph',function(){
-    //  refresh()
-    //})
+    T.test('Generate figures',function(){
+      clearElement(eName)
+      var c=100
+      var a=5
+      var h=50
+      var g=d3.select('#'+eName).append('svg:svg').attr('width',500).attr('height',h)
+      generateFigures(g,h,c,a,0,false)
+      if(!e.hasChildNodes())
+        throw 'Element '+eName+' empty'
+      var svg=e.childNodes[0]
+      if(!svg.hasChildNodes()||svg.nodeName.toLowerCase()!=='svg')
+        throw 'Figures not present'
+      var heads=svg.getElementsByTagName('circle')
+      var bodies=svg.getElementsByTagName('polyline')
+      if(heads.length!=c/a||bodies.length!=c/a)
+        throw 'Improper count of figures: '+heads.length+'/'+bodies.length+', expected: '+c/a
+    })
+
+    T.test('Fill whole graph',function(){
+      var t=4,h=56,b=56
+      clearElement(eName)
+      refresh()
+      if(!e.hasChildNodes())
+        throw 'Element '+eName+' empty'
+      var svg=e.childNodes[0]
+      if(!svg.hasChildNodes()||svg.nodeName.toLowerCase()!=='svg')
+        throw 'Graph not present'
+      var texts=svg.getElementsByTagName('text')
+      var heads=svg.getElementsByTagName('circle')
+      var bodies=svg.getElementsByTagName('polyline')
+      if(heads.length!=h||bodies.length!=b||texts.length!=t)
+        throw 'Improper count of graph elements; texts: '+texts.length+' (expected: '+t+'), figures: '+heads.length+'/'+bodies.length+' (expected: '+h+'/'+b+')'
+    })
 
     T.stat()
   }
