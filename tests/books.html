@@ -1,0 +1,44 @@
+<html>
+<head>
+  <script type="text/javascript" src="Tests.js"></script>
+  <script type="text/javascript" src="../books.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script type="text/javascript">
+  var T
+
+  function _init(){
+    T=new Tests()
+    T.setOutput(document.getElementById('o'))
+
+    var eName='graph'
+    var e=document.getElementById(eName)
+
+    T.test('Clear graph element',function(){
+      e.appendChild(document.createTextNode('text'))
+      clearGraph(eName)
+      if(e.hasChildNodes())
+        throw 'Element '+eName+' not empty'
+    })
+
+    T.test('Construct book object',function(){
+      var wMin=12
+      var wMax=25
+      var h=150
+      var b=constructBook(h)
+      if(b.width<wMin||b.width>wMax)
+        throw 'Book width exceeded limits: '+b.width+' (min: '+wMin+', max: '+wMax+')'
+      if(b.height<2*h/3||b.height>h)
+        throw 'Book height exceeded limits: '+b.height+' (min: '+(2*h/3)+', max: '+h+')'
+    })
+
+    T.stat()
+  }
+  </script>
+</head>
+<body onload="_init()">
+<h1>../books.js tests:</h1>
+<p width="100%" height="100%" id="o" style="border:solid 1px grey"></p>
+<!-- <div id="graph" style="display:none"></div> -->
+<div id="graph" style=""></div>
+</body>
+</html>
