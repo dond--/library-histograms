@@ -5,6 +5,9 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script type="text/javascript">
   var T
+  var wMin=12
+  var wMax=25
+  var h=150
 
   function _init(){
     T=new Tests()
@@ -21,15 +24,47 @@
     })
 
     T.test('Construct book object',function(){
-      var wMin=12
-      var wMax=25
-      var h=150
       var b=constructBook(h)
       if(b.width<wMin||b.width>wMax)
         throw 'Book width exceeded limits: '+b.width+' (min: '+wMin+', max: '+wMax+')'
       if(b.height<2*h/3||b.height>h)
         throw 'Book height exceeded limits: '+b.height+' (min: '+(2*h/3)+', max: '+h+')'
     })
+
+    T.test('Draw book',function(){
+      clearGraph(eName)
+      var b=constructBook(h)
+      var g=d3.select('#graph').append('svg:svg').attr('width',h).attr('height',h)
+      drawBook(b,0,0,g)
+      if(!e.hasChildNodes())
+        throw 'Element '+eName+' empty'
+      var svg=e.childNodes[0]
+      if(!svg.hasChildNodes()||svg.nodeName.toLowerCase()!=='svg')
+        throw 'SVG sketch not present'
+      var html=svg.innerHTML.toLowerCase()
+      if(html.indexOf('<rect')==-1||html.indexOf('<line')==-1)
+        throw 'Rectangle and/or line missing in sketch'
+    })
+
+    T.test('Draw tilted book',function(){
+      clearGraph(eName)
+      var b=constructBook(h)
+      var g=d3.select('#graph').append('svg:svg').attr('width',h).attr('height',h+50)
+      drawBook(b,10,10,g,-13,false)// effectively same as drawLastBook()
+      var svg=e.childNodes[0]
+      var html=svg.innerHTML.toLowerCase()
+      if(html.indexOf('translate(0,3')==-1||html.indexOf('rotate(-13')==-1)
+        throw 'Tilt transformation missing in sketch'
+      while(svg.hasChildNodes())// erase first drawn book
+        svg.removeChild(svg.childNodes[0])
+      drawBook(b,10,10,g,-21,true)
+      var svg=e.childNodes[0]
+      var html=svg.innerHTML.toLowerCase()
+      if(html.indexOf('translate(-3,3')==-1||html.indexOf('rotate(-21')==-1)
+        throw 'Kerning missing in transformed sketch'
+    })
+
+    // T.test('',function(){})
 
     T.stat()
   }
