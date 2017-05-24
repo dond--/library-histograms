@@ -5,9 +5,6 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script type="text/javascript">
   var T
-  var wMin=12
-  var wMax=25
-  var h=150
 
   function _init(){
     T=new Tests()
@@ -15,6 +12,9 @@
 
     var eName='graph'
     var e=document.getElementById(eName)
+    var wMin=12
+    var wMax=25
+    var h=150
 
     T.test('Clear graph element',function(){
       e.appendChild(document.createTextNode('text'))
@@ -64,7 +64,30 @@
         throw 'Kerning missing in transformed sketch'
     })
 
-    // T.test('',function(){})
+    T.test('Complete graph',function(){
+      clearGraph(eName)
+      for(var i=1;i<4;i++){// create fake input values
+        var inp=document.createElement('input')
+        inp.setAttribute('id','test-'+i+'-height')
+        inp.setAttribute('value',Math.floor(Math.random()*150+25))
+        document.getElementById('form').appendChild(inp)
+        inp=document.createElement('input')
+        inp.setAttribute('id','test-'+i+'-width')
+        inp.setAttribute('value',Math.floor(Math.random()*950+25))
+        document.getElementById('form').appendChild(inp)
+      }
+      createGraph()
+      var svg=e.childNodes[0]
+      if(!svg||!svg.hasChildNodes()||svg.nodeName.toLowerCase()!=='svg')
+        throw 'Complete graph missing'
+      var rs=svg.getElementsByTagName('rect')
+      var ls=svg.getElementsByTagName('line')
+      if(rs.length<1||ls.length<1)
+        throw 'Book sketches missing in graph: rectangles = '+rs.length+', lines = '+ls.length
+      var html=svg.innerHTML.toLowerCase()
+      if(html.indexOf('translate(')==-1||html.indexOf('rotate(-13')==-1)
+        throw 'Tilt transformation of last book missing in graph'
+    })
 
     T.stat()
   }
@@ -73,7 +96,7 @@
 <body onload="_init()">
 <h1>../books.js tests:</h1>
 <p width="100%" height="100%" id="o" style="border:solid 1px grey"></p>
-<!-- <div id="graph" style="display:none"></div> -->
-<div id="graph" style=""></div>
+<div id="graph" style="display:none"></div>
+<div id="form" style="display:none"></div>
 </body>
 </html>
